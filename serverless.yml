@@ -1,0 +1,73 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: serverless-nodejs-app
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: '3'
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+# you can overwrite defaults here
+  stage: dev
+  region: us-east-1
+  role: arn:aws:iam::467040637428:role/NBC    #role which has full access to dynamoDB cloudwatch
+  environment:
+    DEPLOYMENT_STAGE: ${opt:stage, self:provider.stage}
+
+
+
+
+
+
+functions:
+  hello: # handler to send dummy logs to the cloudwatch
+    handler: handlers/handler.sendLogs
+    events: # events trigger lambda functions
+      - http: # this is an API Gateway HTTP event trigger
+          path: user
+          method: GET
+          cors: true
+
+  getLo: #lambda is triggred once subscription filter pattern matches the condition in above fuction logs
+    handler: handlers/handler.getLogs1
+    events: # events trigger lambda functions
+      - http: # this is an API Gateway HTTP event trigger
+          path: user1
+          method: POST
+          cors: true
+
+
+resources: # declaring the dynamodb table and use this in logModel
+  Resources:
+      usersTable:
+        Type: AWS::DynamoDB::Table
+        Properties:
+          TableName: logTable
+          AttributeDefinitions:
+            - AttributeName: timestamp
+              AttributeType: N
+          KeySchema:
+            - AttributeName: timestamp
+              KeyType: HASH
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+        
+      
+

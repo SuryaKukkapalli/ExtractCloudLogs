@@ -1,0 +1,19 @@
+{
+  "name": "serverless-nodejs-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1230.0",
+    "pino": "^8.6.1",
+    "raven": "^2.6.4",
+    "serverless-subscription-filter": "^1.1.1",
+    "zlib": "^1.0.5"
+  }
+}
